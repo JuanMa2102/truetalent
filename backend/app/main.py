@@ -8,6 +8,7 @@ from rq import Queue
 from fastapi.middleware.cors import CORSMiddleware
 from . import models
 from fastapi import Depends, HTTPException
+from app.config import REDIS_URL
 
 
 Base.metadata.create_all(bind=engine)
@@ -20,7 +21,7 @@ app.add_middleware(
 )
 
 
-reddis_conn = Redis(host='localhost', port=6379)
+reddis_conn = Redis.from_url(REDIS_URL)
 queue = Queue(connection=reddis_conn)
 setup_exception_handlers(app)
 

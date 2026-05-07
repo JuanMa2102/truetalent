@@ -1,8 +1,10 @@
 from redis import Redis
 from rq import Worker, Queue
-from app.config import REDIS_HOST, REDIS_PORT
+import os
+from app.config import REDIS_URL
 
-redis_conn = Redis(host=REDIS_HOST, port=REDIS_PORT)
+print(REDIS_URL)
+redis_conn = Redis.from_url(REDIS_URL)
 queue = Queue(connection=redis_conn)
 worker = Worker([queue], connection=redis_conn)
 
