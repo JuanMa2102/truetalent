@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const API = 'http://localhost:8000'
+const API = 'https://truetalent.onrender.com'
 
 const STATUS_CONFIG = {
   pending: {
@@ -80,7 +80,7 @@ function App() {
   useEffect(() => { fetchTransactions() }, [])
 
   useEffect(() => {
-    const ws = new WebSocket('ws://127.0.0.1:8000/transactions/stream')
+    const ws = new WebSocket('wss://truetalent.onrender.com/transactions/stream')
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data)
       setTransactions((prev) =>

@@ -9,13 +9,13 @@ from ..models import Transaction
 from ..schemas import TransactionCreate, TransactionResponse
 from ..tasks import process_transactions
 from ..manager import manager
-from ..config import REDIS_HOST, REDIS_PORT
+from ..config import REDIS_URL
 
 router = APIRouter(
     prefix="/transactions",
     tags=["transactions"]
 )
-redis_conn = Redis(host=REDIS_HOST, port=REDIS_PORT)
+redis_conn = Redis.from_url(REDIS_URL)
 queue = Queue(connection=redis_conn)
 
 def get_db():
