@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const API = 'http://localhost:8000'
+const API = 'https://truetalent.onrender.com'
 
 const STATUS_CONFIG = {
   pending: {
