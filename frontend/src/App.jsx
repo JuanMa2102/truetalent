@@ -80,9 +80,11 @@ function App() {
   useEffect(() => { fetchTransactions() }, [])
 
   useEffect(() => {
-    const ws = new WebSocket('ws://127.0.0.1:8000/transactions/stream')
+    console.log('Connecting to WebSocket...')
+    const ws = new WebSocket('wss://truetalent.onrender.com/transactions/stream')
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data)
+      console.log('Received message:', data)
       setTransactions((prev) =>
         prev.map((t) => (t.id == data.id ? { ...t, status: data.status } : t))
       )

@@ -5,7 +5,7 @@ from .database import SessionLocal
 from .models import Transaction
 
 async def process_transactions(transaction_id: int):
-    API_URL = "https://truetalent.onrender.com/transactions/internal/update-status"
+    API_URL = "http://localhost:8000/transactions/internal/update-status"
     try:
         print(f"Procesando transacción {transaction_id}")
         payload = {"id": transaction_id, "status": "processing"}
