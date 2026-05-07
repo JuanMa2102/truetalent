@@ -89,3 +89,20 @@ async def internal_notify(data: dict):
     # Este endpoint recibe el aviso del worker y lo manda al WebSocket
     await manager.broadcast(data)
     return {"status": "ok"}
+
+@router.post("/internal/update-status", include_in_schema=False)
+async def update_status(data: dict, db: Session = Depends(get_db)):
+    transaction_id = data.get("id")
+    status = data.get("status")
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    if transaction:
+        transaction.status = status
+        db.commit()
+        
+        # Aprovechamos para disparar el WebSocket aquí mismo
+        await manager.broadcast({
+            "id": transaction.id,
+            "status": transaction.status
+        })
+        return {"status": "updated"}
+    return {"status": "not found"}, 404

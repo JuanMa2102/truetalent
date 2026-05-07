@@ -5,28 +5,15 @@ from .database import SessionLocal
 from .models import Transaction
 
 async def process_transactions(transaction_id: int):
-    db = SessionLocal()
-    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
-    if not transaction:
-        print(f"Transaction with ID {transaction_id} not found.")
-        return
-
+    API_URL = "http://localhost:8000/transactions/internal/update-status"
     try:
-        print(f"Procesando transacción {transaction.id}")
-        transaction.status = "processing"
+        print(f"Procesando transacción {transaction_id}")
         payload = {"id": transaction_id, "status": "processing"}
-        requests.post("http://localhost:8000/transactions/internal/notify", json=payload)
-        db.commit()
+        requests.post(API_URL, json=payload)
+        
         time.sleep(5)
-        transaction.status = "completed"
         payload = {"id": transaction_id, "status": "completed"}
-        requests.post("http://localhost:8000/transactions/internal/notify", json=payload)
-        db.commit()
+        requests.post(API_URL, json=payload)
     except Exception as e:
-        transaction.status = "failed"
         payload = {"id": transaction_id, "status": "failed"}
-        requests.post("http://localhost:8000/transactions/internal/notify", json=payload)
-        db.commit()
-
-    finally:
-        db.close()
+        requests.post(API_URL, json=payload)
